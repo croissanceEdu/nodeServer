@@ -5,8 +5,16 @@ const morgan = require('morgan');
 const connectDB = require('./db')
 // const multer = require('multer')
 // const upload = multer('./uploads/')
-// const expressfileupload = require('express-fileupload')
-
+const expressfileupload = require('express-fileupload')
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, './uploads');
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, new DataCue().toISOString().file.originalname)
+//     }
+// })
+// const upload = multer({ storage: storage })
 
 require('dotenv').config();
 
@@ -20,9 +28,10 @@ app.use(cors({ origin: process.env.CLIENT_URL }));
 // app.use(cors());
 app.use(express.json());
 
-// app.use(expressfileupload())
+app.use(expressfileupload())
 
 app.use(morgan('dev'))
+app.use(express.static('uploads'))
 
 //loade routes
 const authRouter = require('./routes/auth.route')

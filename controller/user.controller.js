@@ -400,57 +400,41 @@ exports.getUserPairController = (req, res) => {
 
 
 
-exports.setProfilePicByIdController = (req, res, next) => {
-  console.log(req.fil)
-  res.status(200).json({
-    success: true,
-    message: 'Image Uploaded',
-    data: req.data
+exports.setProfilePicByIdController = (req, res) => {
+  const id = req.params.id
+  // const { v4: uuidv4 } = require('uuid');
+
+
+  // console.log(req.files)
+
+  let croppedImage = req.files.croppedImage;
+  //keep all images
+  // let imagePath = 'img' + uuidv4() + new Date().getTime() + croppedImage.name;
+  //replace unwanted images (save memory) 
+  let imagePath = 'img' + id.toString() + croppedImage.name;
+
+  let uploadPath = process.env.UPLOADS_FOLDER + imagePath;
+
+  // console.log(__dirname)
+  croppedImage.mv(uploadPath, function (err) {
+    if (err) {
+      return res.status(500).send(err);
+    }
   })
-  // const { _id,
-  //     currentPassword,
-  //     newPassword } = req.body
-  // const errors = validationResult(req)
-
-  // if (!errors.isEmpty()) {
-  //   const firstError = errors.array().map(error => error.msg)[0]
-  //   return res.status(422).json({
-  //     error: firstError
-  //   })
-  // } else {
-  //   //check exists
-  //   User.findOne({
-  //     _id
-  //   }).exec((err, user) => {
-  //     if (err || !user) {
-  //       return res.status(400).json({
-  //         error: "User doesn't exist, Please sign up"
-  //       })
-  //     }
 
 
-  //     //authenticate
-  //     if (!user.authenticate(currentPassword)) {
-  //       return res.status(400).json({
-  //         error: "Current password doesn't match"
-  //       })
-  //     } else {
+  User.findById(id)
+    .then((user) => {
+      user.imagePath = imagePath
 
+      user.save().then(() =>
+        res.status(200).json({
+          success: true,
+          message: 'Image Uploaded',
+          File: req.files,
+          imagePath
+        })
+      )
+    }).catch(err => res.status(400).json({ error: errorHandler(err) }));
 
-
-  //       User.updateOne({ _id }, { hashed_password: user.encriptPassword(newPassword) })
-  //         .then(() => {
-  //           return res.json({
-  //             success: true,
-  //             message: 'Password Changed Successfully',
-  //             user
-  //           })
-  //         })
-
-  //     }
-
-
-  //   })
-
-  // }
 }

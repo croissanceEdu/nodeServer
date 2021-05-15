@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="73.2mm" height="84.28mm" viewBox="0 0 207.5 238.89">
+  <defs>
+    <clipPath id="f7218ca1-bbb2-407a-91d4-6654a533ded7">
+      <rect y="124.13" width="207.5" height="83.37" fill="none"/>
+    </clipPath>
+  </defs>
+  <title>default-profile-picmdpi</title>
+  <g id="b479b749-ce50-4c8c-a515-543269ab0cbb" data-name="Layer 2">
+    <g id="b6afe9cf-fe68-4df1-b2f4-d9ef1ba24e1c" data-name="Layer 1">
+      <g>
+        <rect width="207.5" height="207.5" fill="#36a9e1"/>
+        <g>
+          <g clip-path="url(#f7218ca1-bbb2-407a-91d4-6654a533ded7)">
+            <path d="M207.5,207c0,6.84-5.37,12.58-14.38,17.22-39.7,20.44-150.07,19.53-183.44-2.74C3.53,217.37,0,212.55,0,207c0-42.53,46.45-77,103.75-77S207.5,164.47,207.5,207Z" fill="#fff"/>
+          </g>
+          <circle cx="103.75" cy="85" r="51.75" fill="#fff"/>
+        </g>
+        <circle cx="83.18" cy="80.05" r="7.56" fill="#dadada"/>
+        <ellipse cx="103.75" cy="113.93" rx="22.6" ry="3.94" fill="#ededed"/>
+        <circle cx="128.07" cy="80.05" r="7.56" fill="#dadada"/>
+        <path d="M155.42,82.09c-1.24.49-11.16-35.8-26.27-35.78-9.34,0-12.81,13.87-23,13.38-10.5-.5-12.64-15.57-22.11-16.58C68.58,41.46,54.44,79.65,52.39,78.67c-1.48-.7,2-22.16,19.07-36.3C74.69,39.7,86.81,30,104.75,30.25a51,51,0,0,1,27.72,9.07C153.75,54.24,156.46,81.67,155.42,82.09Z" fill="#cbbba0"/>
+      </g>
+    </g>
+  </g>
+</svg>

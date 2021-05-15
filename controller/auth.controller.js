@@ -387,11 +387,11 @@ exports.loginController = (req, res) => {
             )
 
 
-            const { _id, name, email, role } = user
+            const { _id, name, email, role, imagePath } = user
             return res.json({
                 token,
                 user: {
-                    _id, name, email, role
+                    _id, name, email, role, imagePath
                 },
                 success: true,
                 message: 'Signup success'
