@@ -10,7 +10,10 @@ const { validationResult } = require("express-validator");
 const { errorHandler } = require("../helpers/dbErrorHandling");
 const { Mongoose, Types } = require("mongoose");
 const ObjectId = Types.ObjectId
-const StudentMap = require('../models/studentmap.model')
+const StudentMap = require('../models/studentmap.model');
+const UserProfile = require("../models/userprofile.model");
+const Feedback = require("../models/feedback.model");
+const Syllabus = require("../models/syllabus.model");
 
 
 exports.classLinkController = (req, res) => {
@@ -108,6 +111,7 @@ exports.getUsersController = (req, res) => {
   const { role } = req.body;
   const errors = validationResult(req);
 
+
   if (!errors.isEmpty()) {
     const firstError = errors.array().map((error) => error.msg)[0];
     return res.status(422).json({
@@ -168,6 +172,7 @@ exports.getUsersByIdController = (req, res) => {
         {
           $project: {
             _id: "$studentmap.studentID",
+            studentMap: "$studentmap",
           },
         },
         {
@@ -186,6 +191,7 @@ exports.getUsersByIdController = (req, res) => {
             role: "$student.role",
             email: "$student.email",
             imagePath: "$student.imagePath",
+            studentMap: 1,
           },
         },
 
@@ -197,17 +203,19 @@ exports.getUsersByIdController = (req, res) => {
               error: errorHandler(err),
             });
           } else {
-            // console.log(user)
-            const userOptions = [];
-            user.map((user) => {
-              userOptions.push({ value: user._id, label: user.name });
-            });
+
+
             res.json({
               success: true,
               message: "Done",
               user,
-              userOptions,
+
             });
+
+
+
+
+
           }
         });
     } else if (role === "student") {
@@ -231,6 +239,7 @@ exports.getUsersByIdController = (req, res) => {
         {
           $project: {
             _id: "$studentmap.teacherID",
+            studentMap: "$studentmap",
           },
         },
         {
@@ -249,6 +258,7 @@ exports.getUsersByIdController = (req, res) => {
             role: "$teacher.role",
             email: "$teacher.email",
             imagePath: "$teacher.imagePath",
+            studentMap: 1
           },
         },
 
@@ -260,27 +270,25 @@ exports.getUsersByIdController = (req, res) => {
               error: errorHandler(err),
             });
           } else {
-            // console.log(user)
-            const userOptions = [];
-            user.map((user) => {
-              userOptions.push({ value: user._id, label: user.name });
-            });
+
             res.json({
               success: true,
               message: "Done",
               user,
-              userOptions,
+
             });
+
+
+
           }
         });
     } else if (role === "admin") {
       User.aggregate([
-
         {
           $lookup: {
             from: "studentmaps",
             localField: "_id",
-            foreignField: "teacherID",
+            foreignField: "studentID",
             as: "studentmap",
           },
         },
@@ -289,33 +297,48 @@ exports.getUsersByIdController = (req, res) => {
 
         {
           $project: {
-            _id: "$studentmap._id",
-            studentID: "$studentmap.studentID",
-            teacherID: "$studentmap.teacherID",
-            teacherName: "$name"
+            teacherId: "$studentmap.teacherID",
+            studentMap: "$studentmap",
+            studentId: "$_id",
+            name: 1,
+            role: 1,
+            email: 1,
+            imagePath: 1,
           },
         },
         {
           $lookup: {
             from: "users",
-            localField: "studentID",
+            localField: "teacherId",
             foreignField: "_id",
-            as: "student",
+            as: "teacher",
           },
         },
-        { $unwind: "$student" },
+        { $unwind: "$teacher" },
         {
           $project: {
-            _id: 1,
-            studentID: 1,
-            teacherID: 1,
-            studentName: "$student.name",
-            teacherName: 1,
+            _id: "$studentMap._id",
+            teacher: {
+              _id: "$teacher._id",
+              name: "$teacher.name",
+              role: "$teacher.role",
+              email: "$teacher.email",
+              imagePath: "$teacher.imagePath",
+            },
+            student: {
+              _id: "$studentId",
+              name: "$name",
+              role: "$role",
+              email: "$email",
+              imagePath: "$imagePath",
+              studentMap: "$studentMap",
+            }
 
           },
         },
 
       ])
+
 
         .exec((err, user) => {
           if (!user) {
@@ -323,15 +346,12 @@ exports.getUsersByIdController = (req, res) => {
               error: errorHandler(err),
             });
           } else {
-            const userOptions = [];
-            user.map((user) => {
-              userOptions.push({ value: user._id, label: user.studentName + "-" + user.teacherName, studentID: user.studentID, teacherID: user.teacherID });
-            });
+
             res.json({
               success: true,
               message: "Done",
               user,
-              userOptions,
+
             });
           }
         });
@@ -371,6 +391,7 @@ exports.getUserPairController = (req, res) => {
           },
         },
         { $unwind: "$student" },
+        { $project: {} }
 
 
       ])
@@ -438,3 +459,162 @@ exports.setProfilePicByIdController = (req, res) => {
     }).catch(err => res.status(400).json({ error: errorHandler(err) }));
 
 }
+
+
+exports.getUserDetailsByIdController = (req, res) => {
+  const { id } = req.body
+
+  User.findById(id)
+    .then((user) => {
+      UserProfile.findOne({ userId: id }).then((userProfile) => {
+        res.status(200).json({
+          success: true,
+          message: 'Got Image Sucessfully',
+          user,
+          userProfile
+        })
+      }).catch(err => {
+        res.status(200).json({
+          success: true,
+          message: 'Got Image Sucessfully',
+          user, userProfile: false
+        })
+      })
+    }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+
+
+}
+
+
+exports.setUserProfileByIdController = (req, res) => {
+
+  const { id, dateOfBirth, contactNumber, fullAddress, gender, qualification } = req.body;
+  User.findById(id)
+    .then((user) => {
+      UserProfile.findOne({ userId: id }).then((userProfile) => {
+        userProfile.dateOfBirth = dateOfBirth
+        userProfile.contactNumber = contactNumber
+        userProfile.fullAddress = fullAddress
+        userProfile.gender = gender
+        userProfile.qualification = qualification
+
+        userProfile.save().then(() =>
+          res.status(200).json({
+            success: true,
+            message: 'Profile Updated',
+            user,
+            userProfile,
+          })
+        ).catch(err => res.status(400).json({ error: errorHandler(err) }));
+
+      }).catch(err => {
+        const userProfile = new UserProfile({
+          userId: id, dateOfBirth, contactNumber, fullAddress, gender, qualification
+        })
+        userProfile.save().then(() =>
+          res.status(200).json({
+            success: true,
+            message: 'Profile Updated',
+            user,
+            userProfile,
+          })
+        )
+      })
+    }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+}
+
+
+
+exports.clearProfilePicByIdController = (req, res) => {
+  const { id } = req.body
+
+  User.findById(id)
+    .then((user) => {
+      user.imagePath = ""
+
+      user.save().then(() =>
+        res.status(200).json({
+          success: true,
+          message: 'Image Removed',
+          imagePath: user.imagePath
+        })
+      )
+    }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+
+}
+
+exports.getNotificationController = (req, res) => {
+  const { _id, role } = req.body
+  const notifications = { feedback: [], activationLinks: [], syllabus: [], joinClass: [] }
+  if (role === "admin") {
+    ActivationLink.find({
+      activated: false,
+      cancelled: false
+    }).then((activationLinks) => {
+      notifications.activationLinks = activationLinks
+
+      User.findById(_id)
+        .then((user) => {
+          res.status(200).json({
+            success: true,
+            message: 'Loaded Sucessfully',
+            imagePath: user.imagePath,
+            notifications
+          })
+        }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+    }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+
+  } else {
+    Feedback.find({
+      toID: _id,
+      isReadStatus: false,
+    }).then((feedback) => {
+
+      notifications.feedback = feedback;
+
+      feedback.map((fb) => {
+        fb.isDeliverStatus = true;
+        fb.save().catch(err => res.status(400).json({ error: errorHandler(err) }));
+      });
+      if (role === "student") {
+        Syllabus.find({
+          studentID: _id,
+          isNewStatus: true
+        }).exec((err, syllabus) => {
+          if (!syllabus) {
+            return res.status(400).json({
+              error: errorHandler(err),
+            });
+          } else {
+            notifications.syllabus = syllabus
+            User.findById(_id)
+              .then((user) => {
+                res.status(200).json({
+                  success: true,
+                  message: 'Loaded Sucessfully',
+                  imagePath: user.imagePath,
+                  notifications
+                })
+              }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+          }
+        });
+      }
+
+      else {
+        User.findById(_id)
+          .then((user) => {
+
+            res.status(200).json({
+              success: true,
+              message: 'Loaded Sucessfully',
+              imagePath: user.imagePath,
+              notifications
+            })
+          }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+      }
+    }).catch(err => res.status(400).json({ error: errorHandler(err) }));
+  }
+
+
+}
+

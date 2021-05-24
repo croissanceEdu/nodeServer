@@ -16,10 +16,11 @@ exports.getSyllabusController = (req, res) => {
     const {
         _id,
         role,
-        oppId
+        oppId,
+        mapId
     } = req.body
     const errors = validationResult(req)
-
+    console.log(mapId)
     if (!errors.isEmpty()) {
         const firstError = errors.array().map(error => error.msg)[0]
         return res.status(422).json({
@@ -27,48 +28,35 @@ exports.getSyllabusController = (req, res) => {
         })
     } else {
         if (role === "student") {
-
-
-            //  Syllabus.aggregate([
-
-            //        {$lookup:{
-            //         from: 'users',
-            //         localField: 'teacherID',
-            //         foreignField: '_id',
-            //         as: 'teacher'
-            //         }
-            //       },
-            //       {$unwind:'$teacher'},
-            //       {$project:{
-            //         _id:1, 
-            //         chapterName:1,
-            //         moduleName:1,
-            //         studentID:1,
-            //         teacherID:1,
-            //         studentComplete:1,
-            //         teacherComplete:1,
-            //         isNewStatus:1,
-            //         teacherName:'$teacher.name'
-            //       }}])
             Syllabus.find({
                 studentID: _id,
-                teacherID: oppId
+                teacherID: oppId,
+                studentMapID: mapId
             })
                 .exec((err, syllabus) => {
                     if (!syllabus) {
                         return res.status(400).json({
                             error: "Error"
                         })
-                    } else res.json({
-                        success: true,
-                        message: "Done",
-                        syllabus
-                    })
+                    } else {
+                        const newSyllabus = []
+                        syllabus.map(syllabus => {
+                            newSyllabus.push(syllabus.toObject())
+                            syllabus.isNewStatus = false;
+                            syllabus.save().catch(err => res.status(400).json({ error: errorHandler(err) }));
+                        })
+                        res.json({
+                            success: true,
+                            message: "Done",
+                            syllabus: newSyllabus
+                        })
+                    }
                 })
         } else if (role === "teacher") {
             Syllabus.find({
                 teacherID: _id,
-                studentID: oppId
+                studentID: oppId,
+                studentMapID: mapId,
             }).exec((err, syllabus) => {
                 if (!syllabus) {
                     return res.status(400).json({
@@ -208,7 +196,8 @@ exports.addSyllabusController = (req, res) => {
         chapterName,
         moduleName,
         studentID,
-        teacherID } = req.body
+        teacherID,
+        studentMapID } = req.body
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
@@ -221,7 +210,8 @@ exports.addSyllabusController = (req, res) => {
             chapterName,
             moduleName,
             studentID,
-            teacherID
+            teacherID,
+            studentMapID
         })
 
         syllabus.save((err, syllabus) => {
@@ -248,7 +238,11 @@ exports.addSyllabusMapController = (req, res) => {
     const {
         studentID,
         teacherID,
-        classLink, } = req.body
+        classLink,
+        courseName,
+        feesAmount,
+        feesCurrency,
+        paidAmount } = req.body
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
@@ -261,6 +255,10 @@ exports.addSyllabusMapController = (req, res) => {
             studentID,
             teacherID,
             classLink,
+            courseName,
+            feesAmount,
+            feesCurrency,
+            paidAmount
         })
 
         studentMap.save((err, studentMap) => {
@@ -296,6 +294,10 @@ exports.addSyllabusMapController = (req, res) => {
                             classLink: 1,
                             teacherID: 1,
                             studentID: 1,
+                            courseName: 1,
+                            feesAmount: 1,
+                            feesCurrency: 1,
+                            paidAmount: 1,
                             teacherName: '$teacher.name',
                             studentName: '$student.name'
                         }
@@ -352,6 +354,10 @@ exports.getSyllabusMapController = (req, res) => {
                 classLink: 1,
                 teacherID: 1,
                 studentID: 1,
+                courseName: 1,
+                feesAmount: 1,
+                feesCurrency: 1,
+                paidAmount: 1,
                 teacherName: '$teacher.name',
                 studentName: '$student.name'
             }
@@ -389,7 +395,10 @@ exports.putSyllabusMapByIdController = (req, res) => {
             // studentMap.teacherID=req.body.teacherID
             // studentMap.studentID=req.body.studentID
             studentMap.classLink = req.body.classLink
-
+            studentMap.courseName = req.body.courseName
+            studentMap.feesAmount = req.body.feesAmount
+            studentMap.feesCurrency = req.body.feesCurrency
+            studentMap.paidAmount = req.body.paidAmount
             studentMap.save().then(() =>
                 res.json({
                     success: true,

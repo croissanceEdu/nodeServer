@@ -44,7 +44,8 @@ exports.getFeedbackNotificationController = (req, res) => {
 };
 
 exports.getFeedbackController = (req, res) => {
-  const { fromID, toID, isSender } = req.body;
+  const { fromID, toID, isSender, studentMapID } = req.body;
+  console.log(studentMapID)
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -56,6 +57,7 @@ exports.getFeedbackController = (req, res) => {
     Feedback.find({
       toID,
       fromID,
+      studentMapID,
     })
       .sort({ _id: -1 })
       .exec((err, feedback) => {
@@ -90,7 +92,7 @@ exports.getFeedbackController = (req, res) => {
 };
 
 exports.sendFeedbackController = (req, res) => {
-  const { titleName, messageContent, fromID, toID } = req.body;
+  const { titleName, messageContent, fromID, toID, studentMapID } = req.body;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -104,6 +106,7 @@ exports.sendFeedbackController = (req, res) => {
       messageContent,
       fromID,
       toID,
+      studentMapID
     });
 
     feedback.save((err, feedback) => {
