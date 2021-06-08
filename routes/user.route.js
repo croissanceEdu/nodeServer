@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Mongoose } = require('mongoose');
+// const { Mongoose } = require('mongoose');
 const { classLinkController, getUsersController, getUsersByIdController, getUserPairController,
     setProfilePicByIdController, getUserDetailsByIdController,
     setUserProfileByIdController, clearProfilePicByIdController,

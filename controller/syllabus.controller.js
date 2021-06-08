@@ -359,7 +359,9 @@ exports.getSyllabusMapController = (req, res) => {
                 feesCurrency: 1,
                 paidAmount: 1,
                 teacherName: '$teacher.name',
-                studentName: '$student.name'
+                studentName: '$student.name',
+                teacher: '$teacher',
+                student: '$student',
             }
         }
 
@@ -388,9 +390,9 @@ exports.getSyllabusMapByIdController = (req, res) => {
 }
 
 exports.putSyllabusMapByIdController = (req, res) => {
+
+
     StudentMap.findById(req.params.id)
-
-
         .then((studentMap) => {
             // studentMap.teacherID=req.body.teacherID
             // studentMap.studentID=req.body.studentID
@@ -402,12 +404,29 @@ exports.putSyllabusMapByIdController = (req, res) => {
             studentMap.save().then(() =>
                 res.json({
                     success: true,
-                    message: 'Successfully Loaded',
+                    message: 'Successfully Saved',
                     studentMap
                 }))
         })
         .catch(err => res.status(400).json({ error: errorHandler(err) }));
 }
+exports.putClassNameController = (req, res) => {
+
+    StudentMap.findById(req.params.id)
+        .then((studentMap) => {
+            // studentMap.teacherID=req.body.teacherID
+            // studentMap.studentID=req.body.studentID
+            studentMap.classLink = req.body.classLink
+            studentMap.save().then(() =>
+                res.json({
+                    success: true,
+                    message: 'Successfully Saved',
+                    studentMap
+                }))
+        })
+        .catch(err => res.status(400).json({ error: errorHandler(err) }));
+}
+
 
 
 exports.getModuleWiseSyllabusController = (req, res) => {

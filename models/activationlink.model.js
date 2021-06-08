@@ -11,7 +11,7 @@ const activationlinkSchema = new Schema({
   activated: { type: Boolean, default: false },
   cancelled: { type: Boolean, default: false },
   actionBy: mongoose.Types.ObjectId,
-  reson: String
+  reason: String
 }, {
   timestamps: true,
 });

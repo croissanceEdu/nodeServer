@@ -38,6 +38,7 @@ const authRouter = require('./routes/auth.route')
 const userRouter = require('./routes/user.route')
 const syllabusRouter = require('./routes/syllabus.route');
 const feedbackRouter = require('./routes/feedback.route');
+const testRouter = require('./routes/test.route');
 
 
 //use routes
@@ -47,6 +48,7 @@ app.use('/api', authRouter);
 app.use('/user', userRouter);
 app.use('/syllabus', syllabusRouter);
 app.use('/feedback', feedbackRouter);
+app.use('/test', testRouter);
 
 
 

@@ -6,7 +6,7 @@ const {
 } = require('../helpers/valid');
 
 const {
-  registerForAdminApproovalController, activationbyAdminController, getActivationLinkNotificationController, getActivationLinkController, loginController, changePasswordController, registerNewAdminController, isUserEmptyController
+  registerForAdminApproovalController, activationbyAdminController, getActivationLinkNotificationController, getActivationLinkController, loginController, changePasswordController, registerNewAdminController, isUserEmptyController, cancelActivationLinkController
 } = require('../controller/auth.controller.js');
 
 
@@ -14,6 +14,7 @@ const {
 router.post('/register', registerForAdminApproovalController)
 //router.post('/register',validRegister,registerController)
 router.post('/activate', activationbyAdminController)
+router.post('/cancel', cancelActivationLinkController)
 router.post('/getforactivation', getActivationLinkController)
 router.post('/notify', getActivationLinkNotificationController)
 router.post('/login', loginController)

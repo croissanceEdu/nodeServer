@@ -48,7 +48,12 @@ exports.classLinkController = (req, res) => {
           $project: {
             _id: 1,
             oppDetails: "$user",
-            classLink: 1
+            classLink: 1,
+            feesAmount: 1,
+            paidAmount: 1,
+            feesCurrency: 1,
+            courseName: 1,
+            isActive: 1
           },
         }
 
@@ -86,7 +91,12 @@ exports.classLinkController = (req, res) => {
           $project: {
             _id: 1,
             oppDetails: "$user",
-            classLink: 1
+            classLink: 1,
+            feesAmount: 1,
+            paidAmount: 1,
+            feesCurrency: 1,
+            courseName: 1,
+            isActive: 1
           },
         }
 

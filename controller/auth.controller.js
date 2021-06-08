@@ -190,7 +190,7 @@ exports.activationbyAdminController = (req, res) => {
                         email
                     }).exec((err, user) => {
                         if (user) {
-                            ActivationLink.updateOne({ _id }, { cancelled: true, actionBy: adminId, reson: "Email already taken" })
+                            ActivationLink.updateOne({ _id }, { cancelled: true, actionBy: adminId, reason: "Email already taken" })
                                 .then(() => {
                                     return res.json({
                                         success: true,
@@ -233,7 +233,14 @@ exports.activationbyAdminController = (req, res) => {
 }
 
 exports.cancelActivationLinkController = (req, res) => {
-    const { _id, reson, adminId } = req.body
+    const { _id, reason, adminId } = req.body
+    ActivationLink.updateOne({ _id }, { cancelled: true, actionBy: adminId, reason })
+        .then(() => {
+            return res.json({
+                success: true,
+                message: 'Canceled'
+            })
+        })
 }
 exports.getActivationLinkController = (req, res) => {
     const { _id, role } = req.body;
