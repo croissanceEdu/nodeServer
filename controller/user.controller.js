@@ -1,12 +1,8 @@
 const User = require("../models/auth.model");
 const ActivationLink = require("../models/activationlink.model");
-// const expressJwt = require("express-jwt");
-// const _ = require("lodash");
-// const { OAuth2Client } = require("google-auth-library");
-// const fetch = require("node-fetch");
+
 const { validationResult } = require("express-validator");
-// const jwt = require("jsonwebtoken");
-//custom error handler
+
 const { errorHandler } = require("../helpers/dbErrorHandling");
 const { Mongoose, Types } = require("mongoose");
 const ObjectId = Types.ObjectId
@@ -130,7 +126,7 @@ exports.getUsersController = (req, res) => {
   } else {
     User.find({
       role,
-    }).exec((err, user) => {
+    }).sort({ name: 1 }).exec((err, user) => {
       if (!user) {
         return res.status(400).json({
           error: errorHandler(err),
@@ -205,7 +201,7 @@ exports.getUsersByIdController = (req, res) => {
           },
         },
 
-      ])
+      ]).sort({ name: 1 })
 
         .exec((err, user) => {
           if (!user) {
@@ -272,7 +268,7 @@ exports.getUsersByIdController = (req, res) => {
           },
         },
 
-      ])
+      ]).sort({ name: 1 })
 
         .exec((err, user) => {
           if (!user) {
@@ -343,6 +339,7 @@ exports.getUsersByIdController = (req, res) => {
               imagePath: "$imagePath",
               studentMap: "$studentMap",
             }
+
 
           },
         },
@@ -555,7 +552,7 @@ exports.clearProfilePicByIdController = (req, res) => {
 
 exports.getNotificationController = (req, res) => {
   const { _id, role } = req.body
-  const notifications = { feedback: [], activationLinks: [], syllabus: [], joinClass: [] }
+  const notifications = { feedback: [], activationLinks: [], syllabus: [], joinClass: [], payment: [] }
   if (role === "admin") {
     ActivationLink.find({
       activated: false,

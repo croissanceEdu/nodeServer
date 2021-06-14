@@ -3,18 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const connectDB = require('./db')
-// const multer = require('multer')
-// const upload = multer('./uploads/')
 const expressfileupload = require('express-fileupload')
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, './uploads');
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, new DataCue().toISOString().file.originalname)
-//     }
-// })
-// const upload = multer({ storage: storage })
 
 require('dotenv').config();
 
@@ -38,6 +27,7 @@ const authRouter = require('./routes/auth.route')
 const userRouter = require('./routes/user.route')
 const syllabusRouter = require('./routes/syllabus.route');
 const feedbackRouter = require('./routes/feedback.route');
+const paymentRouter = require('./routes/payment.route');
 const testRouter = require('./routes/test.route');
 
 
@@ -49,6 +39,7 @@ app.use('/user', userRouter);
 app.use('/syllabus', syllabusRouter);
 app.use('/feedback', feedbackRouter);
 app.use('/test', testRouter);
+app.use('/payment', paymentRouter);
 
 
 
