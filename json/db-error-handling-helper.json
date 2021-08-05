@@ -1,0 +1,7 @@
+[
+    {
+        "language": "English",
+        "accountWithFielsExistsContent": "An account with this @field@ already exists",
+        "alreadyExists": "already exists"
+    }
+]

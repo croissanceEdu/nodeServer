@@ -1,38 +1,42 @@
 "use strict"
 
+const { getDbErrorHandlingHelperContent } = require("./content-api");
 
-const uniqueMessage=error=>{
+const dbErrorHandlingHelperContent = getDbErrorHandlingHelperContent("English")
+
+
+const uniqueMessage = error => {
     let output;
-    try{
-        let fieldName=error.message.split(".$")[1]
-        field=field.split(" dub key")[0]
-        field=field.substring(0,field.lastIndexof("_"))
-        req.flash("errors",[{
-            message:"An account with this "+field+ 'already exists'
+    try {
+        let fieldName = error.message.split(".$")[1]
+        field = field.split(" dub key")[0]
+        field = field.substring(0, field.lastIndexof("_"))
+        req.flash("errors", [{
+            message: "An account with this " + field + 'already exists'
         }])
-   
-        output=fieldName.charAt(0).toUpperCase()+fieldName.slice(1)+'already exists'
-    }catch(err){
-        output='already exists'
+
+        output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + 'already exists'
+    } catch (err) {
+        output = 'already exists'
     }
     return output
 }
 
-exports.errorHandler=error=>{
-    let message="";
-    if(error.code){
-        switch(error.code){
+exports.errorHandler = error => {
+    let message = "";
+    if (error.code) {
+        switch (error.code) {
             case 11000:
-            case 11000:message=uniqueMessage(error)
-            break;
+            case 11000: message = uniqueMessage(error)
+                break;
             default:
-                message="Something went wrong"
+                message = "Something went wrong"
 
         }
-    }else{
-        for(let errorName in error.errors){
-            if(error.errors[errorName].message){
-                message=error.errors[errorName].message
+    } else {
+        for (let errorName in error.errors) {
+            if (error.errors[errorName].message) {
+                message = error.errors[errorName].message
             }
         }
     }

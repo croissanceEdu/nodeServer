@@ -9,6 +9,7 @@ const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
 //custom error handler
 const { errorHandler } = require('../helpers/dbErrorHandling')
+const UserShift = require('../models/user-shift.model')
 //for sending email
 // const sgMail=require('@sendgrid/mail')
 // sgMail.setApiKey(process.env.MAIL_KEY)
@@ -17,7 +18,6 @@ const { errorHandler } = require('../helpers/dbErrorHandling')
 exports.registerForAdminApproovalController = (req, res) => {
     const { name, email, password, imagePath, role } = req.body
     const errors = validationResult(req)
-
     if (!errors.isEmpty()) {
         const firstError = errors.array().map(error => error.msg)[0]
         return res.status(422).json({
@@ -27,46 +27,49 @@ exports.registerForAdminApproovalController = (req, res) => {
         User.findOne({
             email
         }).exec((err, user) => {
-            if (user) {
+            if (err) {
+                return res.status(400).json({ error: errorHandler(err) })
+            }
+            else if (user) {
                 return res.status(400).json({
                     error: "Email is taken"
                 })
+            } else {
+
+
+                //Generate token
+                const token = jwt.sign(
+                    { name, email, password, imagePath, role },
+                    process.env.JWT_ACCOUNT_ACTIVATION,
+                    { expiresIn: '30 days' }
+                )
+
+
+
+                //for test
+                // console.log(`${process.env.CLIENT_URL}/user/activate/${token}`)
+                // res.json({
+                //     message:`${process.env.CLIENT_URL}/user/activate/${token}`
+                // })
+
+                // Should be uncomment             
+                const activationlink = new ActivationLink({
+                    name, email, imagePath, role, token, activated: false,
+                    cancelled: false
+                })
+
+                activationlink.save((err, user) => {
+                    if (err) {
+                        return res.status(401).json({
+                            error: errorHandler(err)
+                        })
+                    } else return res.json({
+                        success: true,
+                        message: 'Activate soon'
+                    })
+                })
             }
         })
-
-        //Generate token
-        const token = jwt.sign(
-            { name, email, password, imagePath, role },
-            process.env.JWT_ACCOUNT_ACTIVATION,
-            { expiresIn: '30 days' }
-        )
-
-
-
-        //for test
-        // console.log(`${process.env.CLIENT_URL}/user/activate/${token}`)
-        // res.json({
-        //     message:`${process.env.CLIENT_URL}/user/activate/${token}`
-        // })
-
-        // Should be uncomment
-        const activationlink = new ActivationLink({
-            name, email, imagePath, role, token, activated: false,
-            cancelled: false
-        })
-
-        activationlink.save((err, user) => {
-            if (err) {
-                return res.status(401).json({
-                    error: errorHandler(err)
-                })
-            } else return res.json({
-                success: true,
-                message: 'Activate soon'
-            })
-        })
-
-
 
 
 
@@ -386,23 +389,31 @@ exports.loginController = (req, res) => {
             //     }
 
 
-            //generate token
-            const token = jwt.sign(
-                { _id: user._id },
-                process.env.JWT_SECRET,
-                { expiresIn: '7d' }
-            )
+            userShift = new UserShift({ userID: user._id, ipAddress: req.ip })
+            userShift.save().then(() => {
 
 
-            const { _id, name, email, role, imagePath } = user
-            return res.json({
-                token,
-                user: {
-                    _id, name, email, role, imagePath
-                },
-                success: true,
-                message: 'Signup success'
-            })
+                //generate token
+                const token = jwt.sign(
+                    { _id: user._id },
+                    process.env.JWT_SECRET,
+                    { expiresIn: '7d' }
+                )
+
+
+                const { _id, name, email, role, imagePath } = user
+                return res.json({
+                    token,
+                    user: {
+                        _id, name, email, role, imagePath
+                    },
+                    success: true,
+                    message: 'Signup success',
+
+                })
+
+            }).catch(err => res.status(403).json({ error: errorHandler(err) }));
+
 
 
 
