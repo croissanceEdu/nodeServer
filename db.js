@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 
 
 const connectDB = () => {
-    // const uri = process.env.ATLAS_URI;
-    const uri = process.env.LOCAL_URI;
+    const uri = process.env.ATLAS_URI;
+    // const uri = process.env.LOCAL_URI;
     mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }
     );
 
