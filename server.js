@@ -13,8 +13,8 @@ const port = process.env.PORT || 4000;
 
 connectDB();
 
-app.use(cors({ origin: process.env.CLIENT_URL }));
-// app.use(cors());
+// app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(cors());
 app.use(express.json());
 
 app.use(expressfileupload())

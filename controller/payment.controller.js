@@ -137,7 +137,7 @@ exports.getRequests = (req, res) => {
 
 exports.addNewShedule = (req, res) => {
   const { studentMapID, userID, userRole, requestAmount, comment, warningDate, lastDate, currency } = req.body;
-
+  console.log(userRole, 1)
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const firstError = errors.array().map((error) => error.msg)[0];
@@ -145,16 +145,16 @@ exports.addNewShedule = (req, res) => {
       error: firstError,
     });
   } else {
-    if (userRole === "teacher") {
-      const paymentSchedule = new PaymentSchedule({ studentMapID, userID, requestAmount, comment, warningDate, lastDate, currency })
 
+    if (userRole === "admin") {
+      const paymentSchedule = new PaymentSchedule({ studentMapID, userID, requestAmount, comment, warningDate, lastDate, currency })
       paymentSchedule.save((err, schedule) => {
         if (err) {
           return res.status(401).json({
             error: errorHandler(err),
           });
         } else {
-          res.status(200).json({
+          res.json({
             success: true,
             message: 'Added Sucessfully',
           })
@@ -162,7 +162,8 @@ exports.addNewShedule = (req, res) => {
       })
 
     } else {
-      return res.status(400)({ error: "Not Allowed" })
+
+      return res.status(400)({ error: "Not Allowed" });
     }
   }
 }

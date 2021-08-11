@@ -1,25 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="73.2mm" height="84.28mm" viewBox="0 0 207.5 238.89">
-  <defs>
-    <clipPath id="f7218ca1-bbb2-407a-91d4-6654a533ded7">
-      <rect y="124.13" width="207.5" height="83.37" fill="none"/>
-    </clipPath>
-  </defs>
-  <title>default-profile-picmdpi</title>
-  <g id="b479b749-ce50-4c8c-a515-543269ab0cbb" data-name="Layer 2">
-    <g id="b6afe9cf-fe68-4df1-b2f4-d9ef1ba24e1c" data-name="Layer 1">
-      <g>
-        <rect width="207.5" height="207.5" fill="#36a9e1"/>
-        <g>
-          <g clip-path="url(#f7218ca1-bbb2-407a-91d4-6654a533ded7)">
-            <path d="M207.5,207c0,6.84-5.37,12.58-14.38,17.22-39.7,20.44-150.07,19.53-183.44-2.74C3.53,217.37,0,212.55,0,207c0-42.53,46.45-77,103.75-77S207.5,164.47,207.5,207Z" fill="#fff"/>
-          </g>
-          <circle cx="103.75" cy="85" r="51.75" fill="#fff"/>
-        </g>
-        <circle cx="83.18" cy="80.05" r="7.56" fill="#dadada"/>
-        <ellipse cx="103.75" cy="113.93" rx="22.6" ry="3.94" fill="#ededed"/>
-        <circle cx="128.07" cy="80.05" r="7.56" fill="#dadada"/>
-        <path d="M155.42,82.09c-1.24.49-11.16-35.8-26.27-35.78-9.34,0-12.81,13.87-23,13.38-10.5-.5-12.64-15.57-22.11-16.58C68.58,41.46,54.44,79.65,52.39,78.67c-1.48-.7,2-22.16,19.07-36.3C74.69,39.7,86.81,30,104.75,30.25a51,51,0,0,1,27.72,9.07C153.75,54.24,156.46,81.67,155.42,82.09Z" fill="#cbbba0"/>
-      </g>
-    </g>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 207.5 238.9" style="enable-background:new 0 0 207.5 238.9;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#00082A;}
+	.st1{fill:none;}
+	.st2{fill:#8A0059;}
+	.st3{fill:#FFAC9F;}
+	.st4{fill:#DADADA;}
+	.st5{fill:#EDEDED;}
+	.st6{fill:#0A5DFF;}
+</style>
+<title>default-profile-picmdpi</title>
+<rect y="0" class="st0" width="207.5" height="207.5"/>
+<rect y="124.1" class="st1" width="207.5" height="83.4"/>
+<g>
+	<path class="st2" d="M207.5,207c0,6.8-5.4,12.6-14.4,17.2C153.4,244.7,43,243.8,9.7,221.5C3.5,217.4,0,212.6,0,207
+		c0-42.5,46.4-77,103.7-77S207.5,164.5,207.5,207z"/>
+</g>
+<circle class="st3" cx="103.7" cy="85" r="51.7"/>
+<circle class="st4" cx="83.2" cy="80.1" r="7.6"/>
+<ellipse class="st5" cx="103.7" cy="113.9" rx="22.6" ry="3.9"/>
+<circle class="st4" cx="128.1" cy="80.1" r="7.6"/>
+<path class="st6" d="M155.4,82.1c-1.2,0.5-11.2-35.8-26.3-35.8c-9.3,0-12.8,13.9-23,13.4C95.6,59.2,93.5,44.1,84,43.1
+	c-15.5-1.6-29.6,36.5-31.6,35.6c-1.5-0.7,2-22.2,19.1-36.3c3.2-2.7,15.3-12.4,33.3-12.1c9.9,0.3,19.6,3.4,27.7,9.1
+	C153.7,54.2,156.5,81.7,155.4,82.1z"/>
 </svg>

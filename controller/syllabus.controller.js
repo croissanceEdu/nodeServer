@@ -20,7 +20,7 @@ exports.getSyllabusController = (req, res) => {
         mapId
     } = req.body
     const errors = validationResult(req)
-    console.log(mapId)
+
     if (!errors.isEmpty()) {
         const firstError = errors.array().map(error => error.msg)[0]
         return res.status(422).json({

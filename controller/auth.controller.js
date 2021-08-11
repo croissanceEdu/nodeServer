@@ -389,30 +389,31 @@ exports.loginController = (req, res) => {
             //     }
 
 
-            userShift = new UserShift({ userID: user._id, ipAddress: req.ip })
-            userShift.save().then(() => {
+            // userShift = new UserShift({ userID: user._id, ipAddress: req.ip })
+            // userShift.save().then(() => {
 
 
-                //generate token
-                const token = jwt.sign(
-                    { _id: user._id },
-                    process.env.JWT_SECRET,
-                    { expiresIn: '7d' }
-                )
+            //generate token
+            const token = jwt.sign(
+                { _id: user._id },
+                process.env.JWT_SECRET,
+                { expiresIn: '7d' }
+            )
 
 
-                const { _id, name, email, role, imagePath } = user
-                return res.json({
-                    token,
-                    user: {
-                        _id, name, email, role, imagePath
-                    },
-                    success: true,
-                    message: 'Signup success',
+            const { _id, name, email, role, imagePath } = user
+            return res.json({
+                token,
+                user: {
+                    _id, name, email, role, imagePath
+                },
+                success: true,
+                message: 'Signup success',
 
-                })
+            })
 
-            }).catch(err => res.status(403).json({ error: errorHandler(err) }));
+
+            // }).catch(err => res.status(403).json({ error: errorHandler(err) })); //usershift Catch
 
 
 
@@ -425,6 +426,44 @@ exports.loginController = (req, res) => {
     }
 }
 
+exports.addShiftController = (req, res) => {
+    const { userId, ipAddress, socketId } = req.body
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        const firstError = errors.array().map(error => error.msg)[0]
+        return res.status(422).json({
+            error: firstError
+        })
+    } else {
+        userShift = new UserShift({ userID: userId, ipAddress, socketID: socketId })
+        userShift.save().then(() => {
+            return res.json({
+                success: true,
+                message: `Connected:${socketId}`,
+            })
+        }).catch(err => res.status(403).json({ error: errorHandler(err) })); //usershift Catch
+    }
+}
+exports.deleteShiftController = (req, res) => {
+    const { socketId } = req.body
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+        const firstError = errors.array().map(error => error.msg)[0]
+        return res.status(422).json({
+            error: firstError
+        })
+    } else {
+        UserShift.updateOne({ socketID: socketId }, { disconnectedAt: new Date(), isActive: false })
+            .then(() => {
+                return res.json({
+                    success: true,
+                    message: `Disconnected:${socketId}`,
+                })
+            })
+    }
+}
 
 exports.changePasswordController = (req, res) => {
     const { _id,
