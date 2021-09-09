@@ -18,6 +18,9 @@ const paymentScheduleSchema = new Schema({
     timestamps: true,
 });
 
+
+
+
 const PaymentSchedule = mongoose.model('PaymentSchedule', paymentScheduleSchema);
 
 module.exports = PaymentSchedule;

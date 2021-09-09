@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const feePaymentRequestSchema = new Schema({
     userID: mongoose.Types.ObjectId,
+    shiftID: mongoose.Types.ObjectId,
     studentMapID: mongoose.Types.ObjectId,
     paymentScheduleID: mongoose.Types.ObjectId,
     senderID: mongoose.Types.ObjectId,

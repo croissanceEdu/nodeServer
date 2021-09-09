@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const currencies = require('currencies.json');
+
 const Schema = mongoose.Schema;
 
 const studentMapSchema = new Schema({
@@ -15,6 +17,18 @@ const studentMapSchema = new Schema({
 }, {
   timestamps: true,
 });
+
+// userSchema.virtual("currencySymbol")
+//   .set(function (symbol) {
+//     this.feesCurrency = this.encriptPassword(password)
+//   })
+//   .get(function () {
+//     return this.hashed_password
+//   })
+
+
+
+
 
 const StudentMap = mongoose.model('StudentMap', studentMapSchema);
 

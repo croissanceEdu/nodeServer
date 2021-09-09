@@ -437,9 +437,10 @@ exports.addShiftController = (req, res) => {
         })
     } else {
         userShift = new UserShift({ userID: userId, ipAddress, socketID: socketId })
-        userShift.save().then(() => {
+        userShift.save().then((usershift) => {
             return res.json({
                 success: true,
+                userShift: usershift,
                 message: `Connected:${socketId}`,
             })
         }).catch(err => res.status(403).json({ error: errorHandler(err) })); //usershift Catch
