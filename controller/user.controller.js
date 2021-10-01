@@ -552,7 +552,8 @@ exports.clearProfilePicByIdController = (req, res) => {
 
 exports.getNotificationController = (req, res) => {
   const { _id, role } = req.body
-  const notifications = { feedback: [], activationLinks: [], syllabus: [], joinClass: [], payment: [] }
+  const notifications = { feedback: [], activationLinks: [], syllabus: [], joinClass: [], payment: [] };
+  const flags = { hasFeedbackUpodate: false };
   if (role === "admin") {
     ActivationLink.find({
       activated: false,
@@ -566,7 +567,8 @@ exports.getNotificationController = (req, res) => {
             success: true,
             message: 'Loaded Sucessfully',
             imagePath: user.imagePath,
-            notifications
+            notifications,
+            flags
           })
         }).catch(err => res.status(400).json({ error: errorHandler(err) }));
     }).catch(err => res.status(400).json({ error: errorHandler(err) }));
@@ -581,6 +583,7 @@ exports.getNotificationController = (req, res) => {
 
       feedback.map((fb) => {
         fb.isDeliverStatus = true;
+        flags.hasFeedbackUpodate = true;
         fb.save().catch(err => res.status(400).json({ error: errorHandler(err) }));
       });
       if (role === "student") {
@@ -600,7 +603,8 @@ exports.getNotificationController = (req, res) => {
                   success: true,
                   message: 'Loaded Sucessfully',
                   imagePath: user.imagePath,
-                  notifications
+                  notifications,
+                  flags
                 })
               }).catch(err => res.status(400).json({ error: errorHandler(err) }));
           }
@@ -615,7 +619,8 @@ exports.getNotificationController = (req, res) => {
               success: true,
               message: 'Loaded Sucessfully',
               imagePath: user.imagePath,
-              notifications
+              notifications,
+              flags
             })
           }).catch(err => res.status(400).json({ error: errorHandler(err) }));
       }

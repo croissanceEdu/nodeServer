@@ -45,7 +45,7 @@ exports.getFeedbackNotificationController = (req, res) => {
 
 exports.getFeedbackController = (req, res) => {
   const { fromID, toID, isSender, studentMapID } = req.body;
-  console.log(studentMapID)
+  const flags = { hasFeedbackUpodate: false };
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -69,6 +69,9 @@ exports.getFeedbackController = (req, res) => {
           const newFeedback = [];
           if (!isSender) {
             feedback.map((feedback) => {
+              if (feedback.isReadStatus === false) {
+                flags.hasFeedbackUpodate = true;
+              }
               newFeedback.push(feedback.toObject());
               feedback.isReaded = feedback.isReadStatus;
               feedback.isDeliverStatus = true;
@@ -85,6 +88,7 @@ exports.getFeedbackController = (req, res) => {
             message: "Done",
             feedback,
             newFeedback,
+            flags
           });
         }
       });
